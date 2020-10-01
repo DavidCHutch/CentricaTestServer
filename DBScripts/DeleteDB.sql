@@ -11,5 +11,10 @@ DROP TABLE [Address]
 
 
 
-DROP PROCEDURE IF EXISTS dbo.Insert_SalesMan_To_District, dbo.Update_SalesMan_In_District, dbo.AddSalesManToDistrict;  
+DROP PROCEDURE IF EXISTS 
+	Remove_Salesman_From_District, 
+	GetAll_Stores_In_District, GetAll_SalesMan_In_District, 
+	dbo.Insert_SalesMan_To_District, 
+	dbo.Update_SalesMan_In_District, 
+	dbo.AddSalesManToDistrict;  
 GO  
