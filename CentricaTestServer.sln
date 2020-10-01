@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentricaTestServer.Domain",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentricaTestServer.WebAPI", "CentricaTestServer.WebAPI\CentricaTestServer.WebAPI.csproj", "{0A208136-5936-47B9-93B3-E6A1BA23B6C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentricaTestServer.DataAccess", "CentricaTestServer.DataAccess\CentricaTestServer.DataAccess.csproj", "{978C16AE-E0E8-4BE1-85F6-C561F646F1AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0A208136-5936-47B9-93B3-E6A1BA23B6C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A208136-5936-47B9-93B3-E6A1BA23B6C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A208136-5936-47B9-93B3-E6A1BA23B6C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{978C16AE-E0E8-4BE1-85F6-C561F646F1AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{978C16AE-E0E8-4BE1-85F6-C561F646F1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{978C16AE-E0E8-4BE1-85F6-C561F646F1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{978C16AE-E0E8-4BE1-85F6-C561F646F1AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
