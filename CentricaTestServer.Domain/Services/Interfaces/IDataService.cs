@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CentricaTestServer.Domain.Services
-{
+namespace CentricaTestServer.Domain.Services.Interfaces
+{ 
     public interface IDataService<T, K>
     {
         Task<IEnumerable<T>> GetAll();
