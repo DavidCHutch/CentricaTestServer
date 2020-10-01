@@ -13,13 +13,13 @@ CREATE TABLE [Address](
 
 CREATE TABLE Salesman(
 	ID UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
-	SSN VARCHAR(max) not null,
+	SSN VARCHAR(max),
 	FirstName VARCHAR(150) not null,
 	LastName VARCHAR(150),
 	Salary FLOAT,
 	Email VARCHAR(max) not null,
 	BirthDate DATETIME not null,
-	AddressID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES [Address](ID) not null,
+	AddressID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES [Address](ID) ON DELETE CASCADE not null,
 );
 
 CREATE TABLE District(
@@ -54,7 +54,7 @@ CREATE TABLE Store(
 	ID UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
 	[Number] VARCHAR(max) not null,
 	[Name] VARCHAR(max) not null,
-	AddressID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES [Address](ID) not null,
+	AddressID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES [Address](ID) ON DELETE CASCADE not null,
 	DistrictID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES District(ID) not null,
 );
 
