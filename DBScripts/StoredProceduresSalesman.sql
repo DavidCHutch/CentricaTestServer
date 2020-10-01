@@ -1,12 +1,14 @@
-CREATE PROCEDURE Get_Stores_In_District @DistrictID UNIQUEIDENTIFIER
+CREATE PROCEDURE GetAll_Stores_In_District 
+	@DistrictID UNIQUEIDENTIFIER
 	AS
 	SELECT * FROM Store WHERE DistrictID = @DistrictID
 GO
 
 
-CREATE PROCEDURE Get_SalesMan_In_District @DistrictID UNIQUEIDENTIFIER
+CREATE PROCEDURE GetAll_SalesMan_In_District 
+	@DistrictID UNIQUEIDENTIFIER
 	AS
-	SELECT SalesmanID, IsPrimary FROM SalesmanDistrict WHERE DistrictID = @DistrictID
+	SELECT SalesmanID FROM SalesmanDistrict WHERE DistrictID = @DistrictID
 GO
 
 CREATE PROCEDURE Insert_SalesMan_To_District @SalesmanID UNIQUEIDENTIFIER, @DistrictID UNIQUEIDENTIFIER, @IsPrimary BIT = 0
