@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CentricaTestServer.DataAccess\CentricaTestServer.DataAccess.csproj" />
+    <ProjectReference Include="..\CentricaTestServer.Domain\CentricaTestServer.Domain.csproj" />
+  </ItemGroup>
+
 
 </Project>

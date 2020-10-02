@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CentricaTestServer.Domain.Services.Interfaces
+namespace CentricaTestServer.DataAccess.DataAccessObjects.Interfaces
 { 
-    public interface IDataService<T, K>
+    public interface IDataAccessObject<T, K>
     {
         Task<IEnumerable<T>> GetAll();
 
