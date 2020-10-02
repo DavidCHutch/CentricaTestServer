@@ -1,9 +1,10 @@
-﻿using CentricaTestServer.DataAccess.Services.Interfaces;
+﻿using CentricaTestServer.Domain.Services.Interfaces;
 using CentricaTestServer.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using CentricaTestServer.DataAccess.Services.Interfaces;
 
 namespace CentricaTestServer.DataAccess.Services
 {
