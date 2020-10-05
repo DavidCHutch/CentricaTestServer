@@ -12,7 +12,8 @@ namespace CentricaTestServer.Domain.Models
         public string LastName { get; set; }
         public double Salary { get; set; }
         public string Email { get; set; }
+        public bool IsPrimary { get; set; }
         public DateTime BirthDate { get; set; }
-        public Address address { get; set; }
+        public Address Address { get; set; }
     }
 }

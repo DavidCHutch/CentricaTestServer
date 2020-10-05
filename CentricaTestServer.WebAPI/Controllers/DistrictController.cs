@@ -15,7 +15,8 @@ using Microsoft.Extensions.Logging;
 
 namespace CentricaTestServer.WebAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class DistrictController : ControllerBase
@@ -27,7 +28,11 @@ namespace CentricaTestServer.WebAPI.Controllers
             _logger = logger;
         }
 
-        // GET: api/<DistrictController>
+        /// <summary>
+        /// Gets all districts
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/<DistrictController>/GetAll
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -54,8 +59,13 @@ namespace CentricaTestServer.WebAPI.Controllers
             return Ok(result);
         }
 
-        // GET api/<DistrictController>/5
-        [HttpGet("Get/{id}")]
+        /// <summary>
+        /// Gets a specific district by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //GET api/<DistrictController>/{id}
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(string id)
         {
             _logger.LogDebug("Started: Getting district by ID: {id}", id);
@@ -89,22 +99,189 @@ namespace CentricaTestServer.WebAPI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Gets all salesman in a specific district
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // GET: api/<DistrictController>/{id}/GetAllSalesman
+        [HttpGet("{id:guid}/GetAllSalesman")]
+        public async Task<IActionResult> GetAllSalesman(string id)
+        {
+            _logger.LogDebug("Started: Getting all salesman in district");
+
+            IEnumerable<Salesman> result;
+            DistrictDAO dao = new DistrictDAO();
+
+            try
+            {
+                result = await dao.GetAllSalesmanInDistrict(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed: Getting all salesman in district");
+                return BadRequest("Failed: Getting all salesman in district");
+            }
+            if (result.Count() == 0)
+            {
+                _logger.LogInformation("No salesman in list");
+            }
+
+            _logger.LogDebug("Finished: Getting all salesman in district");
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Gets all Stores in a specific district
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // GET: api/<DistrictController>/{id}/GetAllStores
+        [HttpGet("{id:guid}/GetAllStores")]
+        public async Task<IActionResult> GetAllStores(string id)
+        {
+            _logger.LogDebug("Started: Getting all stores in district");
+
+            IEnumerable<Store> result;
+            DistrictDAO dao = new DistrictDAO();
+
+            try
+            {
+                result = await dao.GetAllStoresInDistrict(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed: Getting all stores in district");
+                return BadRequest("Failed: Getting all stores in district");
+            }
+            if (result.Count() == 0)
+            {
+                _logger.LogInformation("No stores in list");
+            }
+
+            _logger.LogDebug("Finished: Getting all stores in district");
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Promotes a new salesman to Primary, and demotes the current primary to secondary salesman
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="promoteId"></param>
+        /// <param name="demoteId"></param>
+        /// <returns></returns>
+        // Put: api/<DistrictController>/{id}/ChangePrimarySalesMan?{promoteId}&{demoteId}
+        [HttpPut("{id:guid}/ChangePrimarySalesMan/{promoteId}/{demoteId}")]
+        public async Task<IActionResult> ChangePrimarySalesMan(string id, string promoteId, string demoteId)
+        {
+            _logger.LogDebug("Started: Changing Current Primary Salesman: {demoteId} To New Salesman {promoteId}", promoteId, demoteId);
+
+            bool result; 
+            DistrictDAO dao = new DistrictDAO();
+
+            try
+            {
+                result = await dao.SwapPrimarySalesmanInDistrict(id, promoteId, demoteId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed: Changing Primary salesman");
+                return BadRequest("Failed: Changing Primary salesman");
+            }
+            if (!result)
+            {
+                _logger.LogInformation("Database returned a result of 0");
+            }
+
+            _logger.LogDebug("Finished: Changing Primary salesman position");
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Adds an existing salesman to a specific district
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="salesmanId"></param>
+        /// <returns></returns>
+        // POST: api/<DistrictController>/{id}/AddSalesManToDistrict/{salesmanId}
+        [HttpPut("{id:guid}/AddSalesManToDistrict/{salesmanId}")]
+        public async Task<IActionResult> AddSalesManToDistrict(string id, string salesmanId)
+        {
+            _logger.LogDebug("Started: Adding Salesman: {salesmanId} to District: {id}", salesmanId, id);
+
+            bool result;
+            DistrictDAO dao = new DistrictDAO();
+
+            try
+            {
+                result = await dao.AddSalesmanToDistrict(id, salesmanId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed: Adding Salesman: {salesmanId} to District: {id}", salesmanId, id);
+                return BadRequest("Failed: Adding Salesman to District");
+            }
+            if (!result)
+            {
+                _logger.LogInformation("Database returned a result of 0");
+            }
+
+            _logger.LogDebug("Finished: Adding Salesman: {salesmanId} to District: {id}", salesmanId, id);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Removes a salesman from a specific district
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="salesmanId"></param>
+        /// <returns></returns>
+        // DELETE api/<DistrictController>/{id}/RemoveSalesmanFromDistrict/{salesmanId}
+        [HttpDelete("{id}/RemoveSalesmanFromDistrict/{salesmanId}")]
+        public async Task<IActionResult> RemoveSalesmanFromDistrict(string id, string salesmanId)
+        {
+            _logger.LogDebug("Started: Removing Salesman: {salesmanId} from District: {id}", salesmanId, id);
+
+            bool result;
+            DistrictDAO dao = new DistrictDAO();
+
+            try
+            {
+                result = await dao.RemoveSalesmanFromDistrict(id, salesmanId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed: Removing Salesman: {salesmanId} from District: {id}", salesmanId, id);
+                return BadRequest("Failed: Removing Salesman from District");
+            }
+            if (!result)
+            {
+                _logger.LogInformation("Database returned a result of 0");
+            }
+
+            _logger.LogDebug("Finished: Removing Salesman: {salesmanId} from District: {id}", salesmanId, id);
+            return Ok(result);
+        }
+
         // POST api/<DistrictController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
+            throw new NotImplementedException();
         }
 
         // PUT api/<DistrictController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+            throw new NotImplementedException();
         }
 
         // DELETE api/<DistrictController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            throw new NotImplementedException();
         }
     }
 }

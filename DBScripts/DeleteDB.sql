@@ -12,9 +12,12 @@ DROP TABLE [Address]
 
 
 DROP PROCEDURE IF EXISTS 
-	Remove_Salesman_From_District, 
-	GetAll_Stores_In_District, GetAll_SalesMan_In_District, 
-	dbo.Insert_SalesMan_To_District, 
+	dbo.Remove_Salesman_From_District,
+	dbo.GetAll_In_District,
+	dbo.GetAll_Stores_In_District, 
+	dbo.GetAll_SalesMan_In_District, 
+	dbo.Add_SalesMan_To_District, 
 	dbo.Update_SalesMan_In_District, 
+	dbo.Swap_PrimarySalesMan_In_District,
 	dbo.AddSalesManToDistrict;  
 GO  

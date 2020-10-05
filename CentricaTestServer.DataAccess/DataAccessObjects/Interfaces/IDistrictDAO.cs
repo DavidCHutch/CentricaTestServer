@@ -12,14 +12,14 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects.Interfaces
 
         Task<IEnumerable<Store>> GetAllStoresInDistrict(string id);
 
-        Task<Salesman> AddSalesmanToDistrict(string id);
+        Task<bool> AddSalesmanToDistrict(string id, string salesmanId);
 
-        Task<IEnumerable<Salesman>> AddSalesmanToDistrict(IEnumerable<string> id);
+        //Task<bool> AddSalesmanToDistrict(IEnumerable<string> id);
 
-        Task<Salesman> RemoveSalesmanFromDistrict(string id);
+        Task<bool> RemoveSalesmanFromDistrict(string id, string salesmanId);
 
-        Task<IEnumerable<Salesman>> RemoveSalesmanFromDistrict(IEnumerable<string> id);
+        Task<bool> RemoveSalesmanFromDistrict(IEnumerable<string> id, IEnumerable<string> salesmanId);
 
-        Task<Salesman> SwapPrimarySalesman(string id);
+        Task<bool> SwapPrimarySalesmanInDistrict(string id, string promoteId, string demotedId);
     }
 }
