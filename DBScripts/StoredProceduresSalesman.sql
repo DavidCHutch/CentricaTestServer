@@ -21,7 +21,7 @@ GO
 CREATE PROCEDURE GetAll_SalesMan_Outside_District 
 	@DistrictID UNIQUEIDENTIFIER
 	AS
-	SELECT sd.SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
+	SELECT DISTINCT sd.SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
 	FROM SalesmanDistrict sd 
 	INNER JOIN Salesman s ON sd.SalesmanID = s.ID
 	INNER JOIN [Address] a ON s.AddressID = a.ID
@@ -57,7 +57,7 @@ CREATE PROCEDURE Promote_SalesMan_To_Primary_In_District @PromoteSM UNIQUEIDENTI
 	AS
 	DECLARE @DemoteSM UNIQUEIDENTIFIER
 	SET @DemoteSM = (SELECT sd.SalesmanID FROM SalesmanDistrict AS sd WHERE sd.DistrictID = @DistrictID AND sd.IsPrimary = 1)
-	IF EXISTS (SELECT * FROM SalesmanDistrict AS sd WHERE sd.DistrictID = @DistrictID AND sd.SalesmanID = @DemoteSM AND IsPrimary = 1)
+	IF EXISTS (SELECT * FROM SalesmanDistrict AS sd1 WHERE sd1.DistrictID = @DistrictID AND sd1.SalesmanID = @DemoteSM AND sd1.IsPrimary = 1)
 		IF EXISTS(SELECT * FROM SalesmanDistrict AS sd2 WHERE sd2.DistrictID = @DistrictID AND sd2.SalesmanID = @PromoteSM AND sd2.IsPrimary = 0)
 		UPDATE SalesmanDistrict
 		SET IsPrimary = CASE
@@ -78,8 +78,8 @@ CREATE PROCEDURE Promote_SalesMan_To_Primary_In_District @PromoteSM UNIQUEIDENTI
 CREATE PROCEDURE Remove_Salesman_From_District @SalesmanID UNIQUEIDENTIFIER, @DistrictID UNIQUEIDENTIFIER
 AS
 	IF EXISTS (SELECT * FROM SalesmanDistrict AS sd WHERE sd.DistrictID = @DistrictID AND sd.SalesmanID = @SalesmanID)
-		IF EXISTS (SELECT SalesmanID FROM SalesmanDistrict AS sd WHERE sd.DistrictID = @DistrictID AND sd.SalesmanID = @SalesmanID AND sd.IsPrimary = 0)
-			DELETE FROM SalesmanDistrict Where SalesmanID = @SalesmanID
+		IF EXISTS (SELECT SalesmanID FROM SalesmanDistrict AS sd1 WHERE sd1.DistrictID = @DistrictID AND sd1.SalesmanID = @SalesmanID AND sd1.IsPrimary = 0)
+			DELETE FROM SalesmanDistrict WHERE SalesmanID = @SalesmanID AND DistrictID = @DistrictID
 		ELSE
 			BEGIN;
 				THROW 51000, 'Cannot delete primary before a replacement has been made', 1

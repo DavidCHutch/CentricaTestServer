@@ -24,6 +24,7 @@ insert into District (ID, [Number], [Name]) values ('5dcd2c5a-d895-4780-a76a-d77
 insert into District (ID, [Number], [Name]) values ('63ebfd46-b94d-4067-8c93-2c16fec7e183', 2, 'Stephannie');
 insert into District (ID, [Number], [Name]) values ('59b62ba8-b324-4874-a898-adf2dbe402da', 3, 'Goldia');
 insert into District (ID, [Number], [Name]) values ('d73a874c-fea9-472f-9c17-9acd73f04769', 4, 'Lexine');
+insert into District (ID, [Number], [Name]) values ('a76a874c-fea9-472f-9c17-9acd73f04769', 5, 'New');
 
 --SalesmanDistrict
 insert into SalesmanDistrict (SalesmanID, DistrictID, IsPrimary) values ('dd82b17c-e5eb-4a87-bdab-fc9cd5c56346', '5dcd2c5a-d895-4780-a76a-d777bedd65e9', 0);
