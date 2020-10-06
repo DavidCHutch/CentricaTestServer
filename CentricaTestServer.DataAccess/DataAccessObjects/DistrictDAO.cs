@@ -11,7 +11,7 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
 {
     public class DistrictDAO : IDistrictDAO
     {
-        public async Task<bool> AddSalesmanToDistrict(string id, string salesmanId)
+        public async Task<bool> AddSalesmanToDistrict(string id, Salesman salesman)
         {
             bool didExecute = false;
             await using (SqlConnection _con = new SqlConnection(Constants.conString))
@@ -23,7 +23,7 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@DistrictID", id));
-                command.Parameters.Add(new SqlParameter("@SalesmanID", salesmanId));
+                command.Parameters.Add(new SqlParameter("@SalesmanID", salesman.ID));
 
                 try
                 {
@@ -201,6 +201,67 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
             return result;
         }
 
+        public async Task<IEnumerable<Salesman>> GetAllSalesmanOutsideDistrict(string id)
+        {
+            List<Salesman> result = new List<Salesman>();
+            await using (SqlConnection _con = new SqlConnection(Constants.conString))
+            {
+                _con.Open();
+
+                SqlCommand command = new SqlCommand("dbo.GetAll_SalesMan_Outside_District", _con);
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@DistrictID", id));
+
+                try
+                {
+                    await using (SqlDataReader dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            Address address = new Address()
+                            {
+                                ID = dataReader.GetGuid(dataReader.GetOrdinal("AddressID")),
+                                Country = dataReader.GetValue(dataReader.GetOrdinal("Country"))?.ToString(),
+                                PostalCode = dataReader.GetValue(dataReader.GetOrdinal("PostalCode"))?.ToString(),
+                                City = dataReader.GetValue(dataReader.GetOrdinal("City"))?.ToString(),
+                                Steet = dataReader.GetValue(dataReader.GetOrdinal("Street"))?.ToString(),
+                                SteetNumber = dataReader.GetValue(dataReader.GetOrdinal("StreetNumber"))?.ToString(),
+                                Floor = dataReader.GetValue(dataReader.GetOrdinal("Floor"))?.ToString()
+                            };
+
+                            Salesman salesman = new Salesman()
+                            {
+                                ID = dataReader.GetGuid(dataReader.GetOrdinal("SalesmanID")),
+                                IsPrimary = dataReader.GetBoolean(dataReader.GetOrdinal("IsPrimary")),
+                                FirstName = dataReader.GetString(dataReader.GetOrdinal("FirstName")),
+                                LastName = dataReader.GetValue(dataReader.GetOrdinal("LastName"))?.ToString(),
+                                Email = dataReader.GetString(dataReader.GetOrdinal("Email")),
+                                Address = address,
+                                BirthDate = dataReader.GetDateTime(dataReader.GetOrdinal("BirthDate")),
+                                Salary = dataReader.GetDouble(dataReader.GetOrdinal("Salary")),
+                                SSN = dataReader.GetString(dataReader.GetOrdinal("SSN")),
+                            };
+
+
+                            result.Add(salesman);
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    _con.Close();
+                }
+            }
+
+            return result;
+        }
+
         public async Task<IEnumerable<Store>> GetAllStoresInDistrict(string id)
         {
             List<Store> result = new List<Store>();
@@ -263,7 +324,7 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
             return result;
         }
 
-        public async Task<bool> RemoveSalesmanFromDistrict(string id, string salesmanId)
+        public async Task<bool> RemoveSalesmanFromDistrict(string id, Salesman salesman)
         {
             bool didExecute = false;
             await using (SqlConnection _con = new SqlConnection(Constants.conString))
@@ -275,7 +336,7 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@DistrictID", id));
-                command.Parameters.Add(new SqlParameter("@SalesmanID", salesmanId));
+                command.Parameters.Add(new SqlParameter("@SalesmanID", salesman.ID));
 
                 try
                 {
@@ -304,7 +365,7 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
             return didExecute;
         }
 
-        public async Task<bool> RemoveSalesmanFromDistrict(IEnumerable<string> id, IEnumerable<string> salesmanId)
+        public async Task<bool> RemoveSalesmanFromDistrict(IEnumerable<string> id, IEnumerable<Salesman> salesmen)
         {
             throw new NotImplementedException();
         }
@@ -316,20 +377,19 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects
         /// <param name="promoteId"></param>
         /// <param name="demoteId"></param>
         /// <returns></returns>
-        public async Task<bool> SwapPrimarySalesmanInDistrict(string id, string promoteId, string demoteId)
+        public async Task<bool> PromotePrimarySalesmanInDistrict(string id, Salesman salesmanPromote)
         {
             bool didExecute = false;
             await using (SqlConnection _con = new SqlConnection(Constants.conString))
             {
                 _con.Open();
 
-                SqlCommand command = new SqlCommand("dbo.Swap_PrimarySalesMan_In_District", _con);
+                SqlCommand command = new SqlCommand("dbo.Promote_SalesMan_To_Primary_In_District", _con);
 
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@DistrictID", id));
-                command.Parameters.Add(new SqlParameter("@PromoteSM", promoteId)); 
-                command.Parameters.Add(new SqlParameter("@DemoteSM", demoteId));
+                command.Parameters.Add(new SqlParameter("@PromoteSM", salesmanPromote.ID)); 
 
                 try
                 {

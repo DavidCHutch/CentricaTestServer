@@ -10,16 +10,18 @@ namespace CentricaTestServer.DataAccess.DataAccessObjects.Interfaces
     {
         Task<IEnumerable<Salesman>> GetAllSalesmanInDistrict(string id);
 
+        Task<IEnumerable<Salesman>> GetAllSalesmanOutsideDistrict(string id);
+
         Task<IEnumerable<Store>> GetAllStoresInDistrict(string id);
 
-        Task<bool> AddSalesmanToDistrict(string id, string salesmanId);
+        Task<bool> AddSalesmanToDistrict(string id, Salesman salesman);
 
         //Task<bool> AddSalesmanToDistrict(IEnumerable<string> id);
 
-        Task<bool> RemoveSalesmanFromDistrict(string id, string salesmanId);
+        Task<bool> RemoveSalesmanFromDistrict(string id, Salesman salesman);
 
-        Task<bool> RemoveSalesmanFromDistrict(IEnumerable<string> id, IEnumerable<string> salesmanId);
+        Task<bool> RemoveSalesmanFromDistrict(IEnumerable<string> id, IEnumerable<Salesman> salesmen);
 
-        Task<bool> SwapPrimarySalesmanInDistrict(string id, string promoteId, string demotedId);
+        Task<bool> PromotePrimarySalesmanInDistrict(string id, Salesman salesmanPromote);
     }
 }

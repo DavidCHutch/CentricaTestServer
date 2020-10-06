@@ -16,8 +16,9 @@ DROP PROCEDURE IF EXISTS
 	dbo.GetAll_In_District,
 	dbo.GetAll_Stores_In_District, 
 	dbo.GetAll_SalesMan_In_District, 
+	dbo.GetAll_SalesMan_Outside_District,
 	dbo.Add_SalesMan_To_District, 
 	dbo.Update_SalesMan_In_District, 
-	dbo.Swap_PrimarySalesMan_In_District,
+	dbo.Promote_SalesMan_To_Primary_In_District,
 	dbo.AddSalesManToDistrict;  
 GO  

@@ -132,6 +132,38 @@ namespace CentricaTestServer.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Gets all salesman in a specific district
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // GET: api/<DistrictController>/{id}/GetAllSalesman
+        [HttpGet("{id:guid}/GetAllForeignSalesman")]
+        public async Task<IActionResult> GetAllForeignSalesman(string id)
+        {
+            _logger.LogDebug("Started: Getting all salesman outside district");
+
+            IEnumerable<Salesman> result;
+            DistrictDAO dao = new DistrictDAO();
+
+            try
+            {
+                result = await dao.GetAllSalesmanOutsideDistrict(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed: Getting all salesman outside district");
+                return BadRequest("Failed: Getting all salesman outside district");
+            }
+            if (result.Count() == 0)
+            {
+                _logger.LogInformation("No salesman in list");
+            }
+
+            _logger.LogDebug("Finished: Getting all salesman outside district");
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Gets all Stores in a specific district
         /// </summary>
         /// <param name="id"></param>
@@ -170,30 +202,30 @@ namespace CentricaTestServer.WebAPI.Controllers
         /// <param name="promoteId"></param>
         /// <param name="demoteId"></param>
         /// <returns></returns>
-        // Put: api/<DistrictController>/{id}/ChangePrimarySalesMan?{promoteId}&{demoteId}
-        [HttpPut("{id:guid}/ChangePrimarySalesMan/{promoteId}/{demoteId}")]
-        public async Task<IActionResult> ChangePrimarySalesMan(string id, string promoteId, string demoteId)
+        // Put: api/<DistrictController>/{id}/ChangePrimarySalesMan
+        [HttpPut("{id:guid}/PromotePrimarySalesMan")]
+        public async Task<IActionResult> PromotePrimarySalesMan(string id, [FromBody]Salesman salesmanPromote)
         {
-            _logger.LogDebug("Started: Changing Current Primary Salesman: {demoteId} To New Salesman {promoteId}", promoteId, demoteId);
+            _logger.LogDebug("Started: Changing Promoting salesman: {salesmanPromote.ID} To Primary", salesmanPromote.ID);
 
             bool result; 
             DistrictDAO dao = new DistrictDAO();
 
             try
             {
-                result = await dao.SwapPrimarySalesmanInDistrict(id, promoteId, demoteId);
+                result = await dao.PromotePrimarySalesmanInDistrict(id, salesmanPromote);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed: Changing Primary salesman");
-                return BadRequest("Failed: Changing Primary salesman");
+                _logger.LogError(e, "Failed: Promoting to Primary salesman");
+                return BadRequest("Failed: Promoting to Primary salesman");
             }
             if (!result)
             {
                 _logger.LogInformation("Database returned a result of 0");
             }
 
-            _logger.LogDebug("Finished: Changing Primary salesman position");
+            _logger.LogDebug("Finished: Promoting to Primary Salesman");
             return Ok(result);
         }
 
@@ -204,21 +236,21 @@ namespace CentricaTestServer.WebAPI.Controllers
         /// <param name="salesmanId"></param>
         /// <returns></returns>
         // POST: api/<DistrictController>/{id}/AddSalesManToDistrict/{salesmanId}
-        [HttpPut("{id:guid}/AddSalesManToDistrict/{salesmanId}")]
-        public async Task<IActionResult> AddSalesManToDistrict(string id, string salesmanId)
+        [HttpPut("{id:guid}/AddSalesManToDistrict")]
+        public async Task<IActionResult> AddSalesManToDistrict(string id, [FromBody]Salesman salesman)
         {
-            _logger.LogDebug("Started: Adding Salesman: {salesmanId} to District: {id}", salesmanId, id);
+            _logger.LogDebug("Started: Adding Salesman: {salesman.ID} to District: {id}", salesman.ID, id);
 
             bool result;
             DistrictDAO dao = new DistrictDAO();
 
             try
             {
-                result = await dao.AddSalesmanToDistrict(id, salesmanId);
+                result = await dao.AddSalesmanToDistrict(id, salesman);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed: Adding Salesman: {salesmanId} to District: {id}", salesmanId, id);
+                _logger.LogError(e, "Failed: Adding Salesman: {salesman.ID} to District: {id}", salesman.ID, id);
                 return BadRequest("Failed: Adding Salesman to District");
             }
             if (!result)
@@ -226,7 +258,7 @@ namespace CentricaTestServer.WebAPI.Controllers
                 _logger.LogInformation("Database returned a result of 0");
             }
 
-            _logger.LogDebug("Finished: Adding Salesman: {salesmanId} to District: {id}", salesmanId, id);
+            _logger.LogDebug("Finished: Adding Salesman: {salesman.ID} to District: {id}", salesman.ID, id);
             return Ok(result);
         }
 
@@ -236,22 +268,22 @@ namespace CentricaTestServer.WebAPI.Controllers
         /// <param name="id"></param>
         /// <param name="salesmanId"></param>
         /// <returns></returns>
-        // DELETE api/<DistrictController>/{id}/RemoveSalesmanFromDistrict/{salesmanId}
-        [HttpDelete("{id}/RemoveSalesmanFromDistrict/{salesmanId}")]
-        public async Task<IActionResult> RemoveSalesmanFromDistrict(string id, string salesmanId)
+        // DELETE api/<DistrictController>/{id}/RemoveSalesmanFromDistrict
+        [HttpDelete("{id}/RemoveSalesmanFromDistrict")]
+        public async Task<IActionResult> RemoveSalesmanFromDistrict(string id, [FromBody]Salesman salesman)
         {
-            _logger.LogDebug("Started: Removing Salesman: {salesmanId} from District: {id}", salesmanId, id);
+            _logger.LogDebug("Started: Removing Salesman: {salesman.ID} from District: {id}", salesman.ID, id);
 
             bool result;
             DistrictDAO dao = new DistrictDAO();
 
             try
             {
-                result = await dao.RemoveSalesmanFromDistrict(id, salesmanId);
+                result = await dao.RemoveSalesmanFromDistrict(id, salesman);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed: Removing Salesman: {salesmanId} from District: {id}", salesmanId, id);
+                _logger.LogError(e, "Failed: Removing Salesman: {salesmanId} from District: {id}", salesman.ID, id);
                 return BadRequest("Failed: Removing Salesman from District");
             }
             if (!result)
@@ -259,7 +291,7 @@ namespace CentricaTestServer.WebAPI.Controllers
                 _logger.LogInformation("Database returned a result of 0");
             }
 
-            _logger.LogDebug("Finished: Removing Salesman: {salesmanId} from District: {id}", salesmanId, id);
+            _logger.LogDebug("Finished: Removing Salesman: {salesmanId} from District: {id}", salesman.ID, id);
             return Ok(result);
         }
 
