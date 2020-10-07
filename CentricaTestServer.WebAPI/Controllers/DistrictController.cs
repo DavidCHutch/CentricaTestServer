@@ -17,7 +17,7 @@ namespace CentricaTestServer.WebAPI.Controllers
 {
     //[Authorize]
     [AllowAnonymous]
-    [Route("api/[controller]")]
+    [Route("Centrica/api/[controller]")]
     [ApiController]
     public class DistrictController : ControllerBase
     {

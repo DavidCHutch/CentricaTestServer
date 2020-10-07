@@ -97,6 +97,19 @@ SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
 	WHERE sd.DistrictID NOT IN(@DistrictID)
 
 
+DECLARE @DistrictID UNIQUEIDENTIFIER
+SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
+SELECT DISTINCT sd.DistrictID, .SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
+	FROM SalesmanDistrict sd 
+	INNER JOIN Salesman s ON sd.SalesmanID = s.ID
+	INNER JOIN [Address] a ON s.AddressID = a.ID
+	WHERE sd.SalesmanID NOT IN(@DistrictID)
 
+
+DECLARE @DistrictID UNIQUEIDENTIFIER
+SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
+DECLARE @SalesmanID UNIQUEIDENTIFIER
+SET @SalesmanID = '3A17F6C2-3523-4C4B-BB83-EB6C6F0C076F'
+INSERT INTO SalesmanDistrict VALUES(@SalesmanID, @DistrictID, 0)
 
 	
