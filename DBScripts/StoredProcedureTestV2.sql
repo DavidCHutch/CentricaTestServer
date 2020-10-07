@@ -96,14 +96,28 @@ SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
 	INNER JOIN [Address] a ON s.AddressID = a.ID
 	WHERE sd.DistrictID NOT IN(@DistrictID)
 
+DECLARE @DistrictID UNIQUEIDENTIFIER
+SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
+CREATE TABLE #OmittedSalesman (ID GUID)
+INSERT INTO #OmittedSalesman
+	SELECT SalesmanID FROM SalesmanDistrict sd WHERE sd.DistrictID = @DistrictID
+
+SELECT SalesmanID INTO #OmittedSalesman FROM SalesmanDistrict sd WHERE sd.DistrictID = @DistrictID
+SELECT DISTINCT sd.SalesmanID FROM SalesmanDistrict sd 
+	WHERE sd.DistrictID NOT IN(#OmittedSalesman.SalesmanID)
 
 DECLARE @DistrictID UNIQUEIDENTIFIER
 SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
-SELECT DISTINCT sd.DistrictID, .SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
+SELECT * FROM SalesmanDistrict a
+WHERE a.DistrictID NOT IN(@DistrictID) AND a.SalesmanID NOT IN (SELECT b.SalesmanID FROM SalesmanDistrict b WHERE b.DistrictID = @DistrictID)
+
+--DECLARE @DistrictID UNIQUEIDENTIFIER
+--SET @DistrictID = '5dcd2c5a-d895-4780-a76a-d777bedd65e9'
+SELECT DISTINCT sd.DistrictID, sd.SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
 	FROM SalesmanDistrict sd 
 	INNER JOIN Salesman s ON sd.SalesmanID = s.ID
 	INNER JOIN [Address] a ON s.AddressID = a.ID
-	WHERE sd.SalesmanID NOT IN(@DistrictID)
+	WHERE sd.DistrictID NOT IN(@DistrictID) AND sd.SalesmanID NOT IN (SELECT b.SalesmanID FROM SalesmanDistrict b WHERE b.DistrictID = @DistrictID)
 
 
 DECLARE @DistrictID UNIQUEIDENTIFIER

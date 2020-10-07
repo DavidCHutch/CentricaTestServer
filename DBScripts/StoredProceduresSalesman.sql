@@ -21,11 +21,11 @@ GO
 CREATE PROCEDURE GetAll_SalesMan_Outside_District 
 	@DistrictID UNIQUEIDENTIFIER
 	AS
-	SELECT DISTINCT sd.SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
+	SELECT DISTINCT sd.DistrictID, sd.SalesmanID, sd.IsPrimary, s.FirstName, s.LastName, s.Email, s.BirthDate, s.Salary, s.SSN, s.AddressID, a.Country, a.City, a.PostalCode, a.Street, a.StreetNumber, a.[Floor]
 	FROM SalesmanDistrict sd 
 	INNER JOIN Salesman s ON sd.SalesmanID = s.ID
 	INNER JOIN [Address] a ON s.AddressID = a.ID
-	WHERE sd.DistrictID NOT IN(@DistrictID)
+	WHERE sd.DistrictID NOT IN(@DistrictID) AND sd.SalesmanID NOT IN (SELECT b.SalesmanID FROM SalesmanDistrict b WHERE b.DistrictID = @DistrictID)
 GO
 
 CREATE PROCEDURE GetAll_SalesMan_In_District 
